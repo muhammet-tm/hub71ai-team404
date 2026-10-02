@@ -1,6 +1,6 @@
 import { apiError, upstreamError } from "@/lib/errors";
 import { HISTORY_TURNS, QUESTION_CAP } from "@/lib/config";
-import { BASE, MODEL, MODERATION_MODEL, openai } from "@/lib/openai";
+import { base, MODEL, MODERATION_MODEL, openai } from "@/lib/openai";
 import { askPrompt } from "@/lib/prompts";
 import { ASK_SCHEMA } from "@/lib/schemas";
 import { clip, isLang } from "@/lib/validate";
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     try {
       const res = await openai().responses.create({
         model: MODEL,
-        ...BASE,
+        ...base(MODEL),
         instructions: askPrompt(language) + "\n\nReturn the answer text without markers; list the cited ids in kb_ids and the handoff value in handoff.",
         input,
         text: { format: { type: "json_schema", name: "dalil_answer", schema: ASK_SCHEMA, strict: true } },
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
   try {
     events = await openai().responses.create({
       model: MODEL,
-      ...BASE,
+      ...base(MODEL),
       instructions: askPrompt(language),
       input,
       max_output_tokens: 3000,

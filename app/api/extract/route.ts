@@ -1,6 +1,6 @@
 import { apiError, upstreamError } from "@/lib/errors";
 import { MAX_UPLOAD_BYTES } from "@/lib/config";
-import { BASE, VISION_MODEL, VISION_RETRY_MODEL, openai } from "@/lib/openai";
+import { base, VISION_MODEL, VISION_RETRY_MODEL, openai } from "@/lib/openai";
 import { EXTRACT_PROMPT } from "@/lib/prompts";
 import { EXTRACTION_SCHEMA } from "@/lib/schemas";
 import type { Extraction, ExtractResponse } from "@/lib/types";
@@ -13,7 +13,7 @@ async function readDocument(model: string, dataUrl: string, expected: string): P
   // No tools are exposed: text inside the image can never trigger an action.
   const res = await openai().responses.create({
     model,
-    ...BASE,
+    ...base(model),
     instructions: EXTRACT_PROMPT,
     input: [
       {

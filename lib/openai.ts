@@ -16,5 +16,11 @@ export const TRANSCRIBE_MODEL = "gpt-transcribe";
 export const SPEECH_MODEL = "gpt-4o-mini-tts";
 export const SPEECH_VOICE = "alloy";
 
-/** Options shared by every Responses call: nothing stored, low reasoning effort for speed. */
-export const BASE = { store: false, reasoning: { effort: "low" as const } };
+/**
+ * Options shared by every Responses call: nothing stored, and the lowest reasoning effort the
+ * model accepts (Luna accepts "none"; Sol and Astra start at "low").
+ */
+export function base(model: string) {
+  const effort = model.includes("luna") ? ("none" as const) : ("low" as const);
+  return { store: false, reasoning: { effort } };
+}
