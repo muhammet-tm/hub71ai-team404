@@ -38,10 +38,10 @@ The challenge is "How can we make it easier for people to arrive, settle in and 
 
 | Feature | Model |
 |---|---|
-| Read the admission letter and the passport | `OPENAI_VISION_MODEL` (default `gpt-6.1-sol`), image input, strict JSON schema |
+| Read the admission letter and the passport | `OPENAI_VISION_MODEL` (default `gpt-6.1-sol`; the deployment uses `gpt-6-luna` for speed), image input, strict JSON schema |
 | Personalize the plan | `OPENAI_MODEL` (default `gpt-6.1-sol`), Structured Outputs |
 | Answer questions | `OPENAI_MODEL`, streamed, after `omni-moderation-latest` |
-| Voice input and output | `gpt-transcribe` and `gpt-4o-mini-tts` |
+| Voice input and output | `gpt-4o-transcribe` and `gpt-4o-mini-tts` |
 
 ## Run locally
 

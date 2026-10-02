@@ -1,10 +1,14 @@
 import { apiError, upstreamError } from "@/lib/errors";
 import { MAX_UPLOAD_BYTES } from "@/lib/config";
+import { toFile } from "openai";
 import { TRANSCRIBE_MODEL, openai } from "@/lib/openai";
 
 export const maxDuration = 60;
 
-const ALLOWED = ["mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"];
+const EXT: Record<string, string> = {
+  mpeg: "mp3", mp3: "mp3", mpga: "mp3", mp4: "mp4", "x-m4a": "m4a", m4a: "m4a", aac: "m4a",
+  wav: "wav", "x-wav": "wav", wave: "wav", webm: "webm", ogg: "ogg",
+};
 
 export async function POST(request: Request) {
   let form: FormData;
@@ -21,8 +25,9 @@ export async function POST(request: Request) {
   if (audio.size > MAX_UPLOAD_BYTES)
     return apiError("payload_too_large", "The recording is too long. Keep it under 30 seconds.", "typed_input");
 
-  const ext = ALLOWED.includes(subtype) ? subtype : subtype === "x-m4a" || subtype === "aac" ? "m4a" : "webm";
-  const file = new File([await audio.arrayBuffer()], `question.${ext}`, { type: audio.type });
+  // The API infers the format from the file name, so the extension must match the content.
+  const ext = EXT[subtype] || "webm";
+  const file = await toFile(Buffer.from(await audio.arrayBuffer()), `question.${ext}`, { type: audio.type.split(";")[0] });
   const started = Date.now();
   try {
     const res = await openai().audio.transcriptions.create({ file, model: TRANSCRIBE_MODEL });

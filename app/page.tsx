@@ -37,6 +37,13 @@ export default function StartPage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (c?.accepted) setConsent(true);
     if (p) setForm(p);
+    // Warm the plan route with a fictional profile (no user data), because the first call after
+    // idle was measured at 29 to 52 s and later calls at 5 to 7 s.
+    fetch("/api/plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profile: { fullName: "Sample", country: "Sample", university: "Sample", program: "Sample", arrivalDate: "2026-10-23", language: "ru" } }),
+    }).catch(() => {});
   }, []);
 
   function applyExtraction(r: ExtractResponse) {

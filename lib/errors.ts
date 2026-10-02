@@ -24,6 +24,7 @@ export function upstreamError(err: unknown, fallback: ApiFallback): Response {
   const name = err instanceof Error ? err.name : "";
   if (name === "APIConnectionTimeoutError" || name === "AbortError")
     return apiError("timeout", "The AI service took too long to respond.", fallback, true);
-  console.error("[dalil] upstream error", status || "", name);
+  const code = typeof err === "object" && err !== null && "code" in err ? String((err as { code: unknown }).code) : "";
+  console.error("[dalil] upstream error", status || "", name, code);
   return apiError("upstream_error", "The AI service did not respond.", fallback, true);
 }

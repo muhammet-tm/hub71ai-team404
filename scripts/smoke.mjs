@@ -38,11 +38,11 @@ async function ask(question, language) {
   return text;
 }
 
-await probe("smoke: key works", async () => {
-  const res = await fetch(`${base}/api/smoke`);
+await probe("info: configured models", async () => {
+  const res = await fetch(`${base}/api/info`);
   const j = await res.json();
   if (!res.ok) throw new Error(JSON.stringify(j));
-  return `${j.model} ${j.ms} ms`;
+  return JSON.stringify(j);
 });
 
 await probe("extract: admission letter", async () => {

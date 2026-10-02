@@ -12,7 +12,8 @@ export const MODEL = process.env.OPENAI_MODEL || "gpt-6.1-sol";
 export const VISION_MODEL = process.env.OPENAI_VISION_MODEL || "gpt-6.1-sol";
 export const VISION_RETRY_MODEL = "gpt-6-astra";
 export const MODERATION_MODEL = "omni-moderation-latest";
-export const TRANSCRIBE_MODEL = "gpt-transcribe";
+// gpt-4o-transcribe answered in about 1.6 s in testing; gpt-transcribe took about 32 s for the same clip.
+export const TRANSCRIBE_MODEL = process.env.OPENAI_TRANSCRIBE_MODEL || "gpt-4o-transcribe";
 export const SPEECH_MODEL = "gpt-4o-mini-tts";
 export const SPEECH_VOICE = "alloy";
 

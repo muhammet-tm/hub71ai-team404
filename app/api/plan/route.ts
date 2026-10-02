@@ -6,7 +6,7 @@ import { PLAN_SCHEMA } from "@/lib/schemas";
 import { clip, isIsoDate, isLang, validatePlanSteps } from "@/lib/validate";
 import type { PlanResult, PlanStep } from "@/lib/types";
 
-export const maxDuration = 60;
+export const maxDuration = 90;
 
 export async function POST(request: Request) {
   let body: { profile?: Record<string, unknown> };
