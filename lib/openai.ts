@@ -4,7 +4,7 @@ import OpenAI from "openai";
 let client: OpenAI | null = null;
 
 export function openai(): OpenAI {
-  if (!client) client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 45_000, maxRetries: 1 });
+  if (!client) client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY?.trim(), timeout: 45_000, maxRetries: 1 });
   return client;
 }
 
