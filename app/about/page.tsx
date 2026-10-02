@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StatusBadge } from "@/components/ui";
+import { REJECTED } from "@/lib/dataset";
 import { KB } from "@/lib/kb";
 import { store } from "@/lib/storage";
 
@@ -32,7 +33,7 @@ export default function AboutPage() {
   return (
     <div className="space-y-6">
       <section className="rise pt-2">
-        <h1 className="text-[24px] leading-tight font-extrabold tracking-tight">Sources and privacy</h1>
+        <h1 className="text-[24px] leading-tight font-extrabold tracking-tight">Sources, dataset, and privacy</h1>
         <p className="mt-1 text-[13px] leading-snug text-muted">
           Dalil is a hackathon prototype built on 2 October 2026. It is a guide, not an authority. It submits no application and
           gives no legal advice.
@@ -50,11 +51,34 @@ export default function AboutPage() {
       </section>
 
       <section>
-        <h2 className="text-[15px] font-extrabold">The {KB.entries.length} verified entries</h2>
+        <h2 className="text-[15px] font-extrabold">The dataset: {KB.entries.length} verified arrival steps</h2>
         <p className="mt-1 text-[12px] leading-snug text-muted">
           Each status comes from an independent fact-check of the team&apos;s research against the cited page on 2 October 2026.
           Several official pages could not be opened on that day, and facts from Abu Dhabi University come from a form dated 2018.
         </p>
+        <div className="mt-3 grid grid-cols-4 gap-2 text-center">
+          {(
+            [
+              [KB.entries.length, "entries"],
+              [KB.entries.filter((e) => e.status === "confirmed").length, "confirmed"],
+              [KB.entries.filter((e) => e.status === "partially_confirmed").length, "partly"],
+              [KB.entries.filter((e) => e.status === "dated_2018").length, "dated 2018"],
+            ] as [number, string][]
+          ).map(([n, label]) => (
+            <div key={label} className="rounded-xl border border-line bg-sand/50 px-1 py-2">
+              <p className="text-[20px] leading-none font-extrabold text-teal">{n}</p>
+              <p className="mt-1 text-[10.5px] font-bold text-muted">{label}</p>
+            </div>
+          ))}
+        </div>
+        <a
+          href="/api/dataset"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 block rounded-xl border-2 border-teal px-3 py-2.5 text-center text-[13px] font-extrabold text-teal"
+        >
+          Open the full dataset (JSON) ↗
+        </a>
         <ul className="mt-3 divide-y divide-line rounded-2xl border border-line">
           {KB.entries.map((e) => (
             <li key={e.id} className="px-3 py-2.5">
@@ -67,6 +91,21 @@ export default function AboutPage() {
               <a href={e.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-[11.5px] font-semibold text-teal underline underline-offset-2">
                 {e.sourceName} ↗
               </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="rounded-2xl border border-gold bg-gold-soft/60 p-4">
+        <h2 className="text-[15px] font-extrabold">What the fact-check rejected</h2>
+        <p className="mt-1 text-[12px] leading-snug text-muted">
+          Building this dataset exposed a problem of its own: some official pages a new student needs could not be opened, and the
+          university&apos;s public visa form dates from 2018. These {REJECTED.length} claims were kept out of Dalil.
+        </p>
+        <ul className="mt-2 space-y-2">
+          {REJECTED.map((r) => (
+            <li key={r.topic} className="text-[12.5px] leading-snug">
+              <span className="font-bold">{r.topic}.</span> <span className="text-muted">{r.reason}</span>
             </li>
           ))}
         </ul>
