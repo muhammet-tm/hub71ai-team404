@@ -1,0 +1,27 @@
+{
+ "source": "saved_example",
+ "model": "saved example",
+ "ms": 0,
+ "extraction": {
+  "document_type": "passport",
+  "readable": true,
+  "full_name": "Merdan Atayev",
+  "nationality": "Turkmenistan",
+  "university": "",
+  "program": "",
+  "start_date": "",
+  "duration_of_study": "",
+  "passport_expiry": "2027-02-14",
+  "confidence": {
+   "full_name": "high",
+   "nationality": "high",
+   "university": "not_found",
+   "program": "not_found",
+   "start_date": "not_found",
+   "duration_of_study": "not_found",
+   "passport_expiry": "high"
+  },
+  "issues": [],
+  "embedded_instructions": false
+ }
+}

@@ -1,0 +1,27 @@
+{
+ "source": "saved_example",
+ "model": "saved example",
+ "ms": 0,
+ "extraction": {
+  "document_type": "admission_letter",
+  "readable": true,
+  "full_name": "Merdan Atayev",
+  "nationality": "Turkmenistan",
+  "university": "Abu Dhabi University",
+  "program": "Bachelor of Science in Information Technology",
+  "start_date": "2026-10-26",
+  "duration_of_study": "4 years (8 semesters)",
+  "passport_expiry": "",
+  "confidence": {
+   "full_name": "high",
+   "nationality": "high",
+   "university": "high",
+   "program": "high",
+   "start_date": "high",
+   "duration_of_study": "high",
+   "passport_expiry": "not_found"
+  },
+  "issues": [],
+  "embedded_instructions": false
+ }
+}

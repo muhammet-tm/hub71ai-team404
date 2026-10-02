@@ -1,0 +1,109 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { StatusBadge } from "@/components/ui";
+import { KB } from "@/lib/kb";
+import { store } from "@/lib/storage";
+
+const MODELS = [
+  ["Reads the admission letter and the passport", "gpt-6.1-sol vision, Structured Outputs"],
+  ["Personalizes and translates the plan", "gpt-6.1-sol, Structured Outputs"],
+  ["Answers questions from the verified sources", "gpt-6.1-sol, streaming"],
+  ["Screens every question", "omni-moderation-latest"],
+  ["Turns speech into text", "gpt-transcribe"],
+  ["Reads answers aloud", "gpt-4o-mini-tts"],
+];
+
+export default function AboutPage() {
+  const router = useRouter();
+  return (
+    <div className="space-y-6">
+      <section className="rise pt-2">
+        <h1 className="text-[24px] leading-tight font-extrabold tracking-tight">Sources and privacy</h1>
+        <p className="mt-1 text-[13px] leading-snug text-muted">
+          Dalil is a hackathon prototype built on 2 October 2026. It is a guide, not an authority. It submits no application and
+          gives no legal advice.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-[15px] font-extrabold">How Dalil stays accurate</h2>
+        <ul className="mt-2 space-y-1.5 text-[13px] leading-snug">
+          <li>The AI model selects steps and writes in your language. It never writes a fee, a deadline, or a link.</li>
+          <li>Every fact, fee, and link on screen comes from the {KB.entries.length} entries listed below.</li>
+          <li>When no entry covers a question, Dalil says so and names the office to ask.</li>
+          <li>Dates on the plan are a suggested order unless a card says &quot;Sourced deadline&quot;.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 className="text-[15px] font-extrabold">The {KB.entries.length} verified entries</h2>
+        <p className="mt-1 text-[12px] leading-snug text-muted">
+          Each status comes from an independent fact-check of the team&apos;s research against the cited page on 2 October 2026.
+          Several official pages could not be opened on that day, and facts from Abu Dhabi University come from a form dated 2018.
+        </p>
+        <ul className="mt-3 divide-y divide-line rounded-2xl border border-line">
+          {KB.entries.map((e) => (
+            <li key={e.id} className="px-3 py-2.5">
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-[12.5px] font-bold">
+                  {e.id} · {e.title}
+                </p>
+                <StatusBadge status={e.status} />
+              </div>
+              <a href={e.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-[11.5px] font-semibold text-teal underline underline-offset-2">
+                {e.sourceName} ↗
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2 className="text-[15px] font-extrabold">What Dalil does not cover</h2>
+        <ul className="mt-2 space-y-1.5 text-[13px] leading-snug">
+          <li>Bank accounts, current university fees, and the entry permit procedure. No official page that the team could open confirms them.</li>
+          <li>Government fees for the student visa, the medical test, and the Emirates ID.</li>
+          <li>Whether a document is genuine, and whether you are eligible for a visa.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 className="text-[15px] font-extrabold">OpenAI models at work</h2>
+        <ul className="mt-2 divide-y divide-line rounded-2xl border border-line">
+          {MODELS.map(([what, model]) => (
+            <li key={what} className="flex items-center justify-between gap-3 px-3 py-2.5 text-[12.5px]">
+              <span>{what}</span>
+              <code className="shrink-0 rounded bg-sand px-1.5 py-0.5 text-[11px] font-bold">{model}</code>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2 className="text-[15px] font-extrabold">Your data</h2>
+        <ul className="mt-2 space-y-1.5 text-[13px] leading-snug">
+          <li>Our server stores no documents, no profiles, and no conversations.</li>
+          <li>Your profile, plan, and chat stay in this browser on this device.</li>
+          <li>Dalil reads no passport number and no date of birth, and sends only your first name to the AI model.</li>
+          <li>Photos and questions are sent to OpenAI, outside the UAE, to be processed. OpenAI may keep abuse-monitoring logs for up to 30 days.</li>
+        </ul>
+        <button
+          onClick={() => {
+            store.deleteAll();
+            router.push("/");
+          }}
+          className="mt-3 w-full rounded-2xl border-2 border-red px-4 py-3 text-[14px] font-extrabold text-red"
+        >
+          Delete my data from this device
+        </button>
+      </section>
+
+      <section className="pb-2 text-[12px] text-muted">
+        Found a wrong or outdated step? Tell the Dalil team or your university&apos;s international office, and always confirm
+        with the official source linked on the step. Built by Muhammet Yalkapov and Sulaymon Sadullo for the Hub71+ AI Hackathon
+        supported by OpenAI.
+      </section>
+    </div>
+  );
+}
