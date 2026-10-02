@@ -1,293 +1,136 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowRight, Camera, FileText } from "@phosphor-icons/react";
-import { Dots, Flag, StateLabel } from "@/components/ui";
-import { computeFlags } from "@/lib/checks";
-import { DalilError, SAMPLES, extractFromFile, extractSample } from "@/lib/client";
+import Link from "next/link";
+import { ArrowRight, Camera, ChatsCircle, Ticket } from "@phosphor-icons/react/dist/ssr";
+import { Logo, PlaneMark } from "@/components/Logo";
+import { REJECTED } from "@/lib/dataset";
+import { KB } from "@/lib/kb";
 import { LANG_LABELS } from "@/lib/config";
-import { store } from "@/lib/storage";
-import type { CheckFlag, Confidence, ExtractResponse, Lang, Profile } from "@/lib/types";
 
-const EMPTY: Profile = { fullName: "", country: "", university: "", program: "", arrivalDate: "", language: "en" };
+const STEPS = [
+  { code: "01", icon: Camera, title: "Scan your letter", text: "Photograph your admission letter. OpenAI vision reads it, and you confirm every field." },
+  { code: "02", icon: Ticket, title: "Get your plan", text: "Every step from visa to Emirates ID, in order, each stamped with its official source." },
+  { code: "03", icon: ChatsCircle, title: "Ask anything", text: "Answers come from verified sources only. When none exists, Dalil says so." },
+];
 
-function minusDays(iso: string, days: number): string {
-  const d = new Date(iso + "T00:00:00Z");
-  if (Number.isNaN(d.getTime())) return "";
-  d.setUTCDate(d.getUTCDate() - days);
-  return d.toISOString().slice(0, 10);
-}
-
-export default function StartPage() {
-  const router = useRouter();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [consent, setConsent] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [result, setResult] = useState<ExtractResponse | null>(null);
-  const [flags, setFlags] = useState<CheckFlag[]>([]);
-  const [form, setForm] = useState<Profile | null>(null);
-  const [conf, setConf] = useState<Partial<Record<keyof Profile, Confidence>>>({});
-  const [preview, setPreview] = useState<string>(SAMPLES.admission_letter.image);
-
-  useEffect(() => {
-    // Restore an earlier session from this device (localStorage is unavailable during server render).
-    const c = store.getConsent();
-    const p = store.getProfile();
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (c?.accepted) setConsent(true);
-    if (p) setForm(p);
-  }, []);
-
-  function applyExtraction(r: ExtractResponse) {
-    const ex = r.extraction;
-    const arrival = ex.start_date ? minusDays(ex.start_date, 3) : "";
-    setResult(r);
-    setFlags(computeFlags(ex, "admission_letter", arrival));
-    setConf({
-      fullName: ex.confidence.full_name,
-      country: ex.confidence.nationality,
-      university: ex.confidence.university,
-      program: ex.confidence.program,
-      arrivalDate: ex.confidence.start_date,
-    });
-    setForm({
-      fullName: ex.full_name,
-      country: ex.nationality,
-      university: ex.university,
-      program: ex.program,
-      arrivalDate: arrival,
-      language: form?.language || "en",
-    });
-  }
-
-  async function run(job: () => Promise<ExtractResponse>, image: string) {
-    setBusy(true);
-    setError("");
-    setResult(null);
-    setFlags([]);
-    setPreview(image);
-    store.setConsent();
-    try {
-      applyExtraction(await job());
-    } catch (e) {
-      setError(e instanceof DalilError ? e.message : "The letter could not be read. Type the details below.");
-      setConf({});
-      setForm((f) => f || EMPTY);
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  function createPlan() {
-    if (!form) return;
-    store.setProfile(form);
-    store.clearPlan();
-    router.push("/plan");
-  }
-
-  const ready = form && form.country.trim() && form.arrivalDate && form.university.trim();
-  const low = (k: keyof Profile) => conf[k] === "low" || conf[k] === "not_found" || conf[k] === "medium";
-  const showForm = form && !busy;
-
+export default function LandingPage() {
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,540px)] lg:gap-12 xl:gap-16">
-      {/* Left: the promise, the consent, the two actions */}
-      <div className="space-y-6 lg:pt-6">
-        <section className="rise">
-          <h1 className="font-display text-[34px] leading-[1.05] font-bold tracking-tight sm:text-[44px] xl:text-[56px]">
-            From admission letter to settled in Abu Dhabi.
+    <div className="overflow-x-clip">
+      <header className="mx-auto flex w-full max-w-[1360px] items-center justify-between px-6 py-5 lg:px-12">
+        <Logo size={44} />
+        <nav className="flex items-center gap-2 sm:gap-4" aria-label="Main">
+          <Link href="/about" className="hidden px-2 py-2 text-[14px] font-bold underline decoration-ink/30 underline-offset-4 hover:decoration-ink sm:block">
+            Sources and dataset
+          </Link>
+          <Link href="/start" className="btn btn-primary px-4 py-2.5 text-[14px]">
+            Open Dalil
+          </Link>
+        </nav>
+      </header>
+
+      {/* Hero: fills the first screen */}
+      <section className="mx-auto grid min-h-[calc(100dvh-92px)] w-full max-w-[1360px] grid-cols-1 items-center gap-10 px-6 pt-4 pb-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-6 lg:px-12">
+        <div className="rise">
+          <h1 className="font-display text-[48px] leading-[0.96] font-bold tracking-tight sm:text-[72px] xl:text-[96px]">
+            Arrive in
+            <br />
+            Abu Dhabi
+            <br />
+            <span className="text-stamp">with a plan.</span>
           </h1>
-          <p className="mt-4 max-w-[52ch] text-[15.5px] leading-relaxed text-ink/80">
-            Photograph your admission letter. Dalil builds your arrival plan in your language, with the official source on every
-            step.
+          <p className="mt-6 max-w-[46ch] text-[17px] leading-relaxed text-ink/80 xl:text-[19px]">
+            Photograph your admission letter. Dalil turns it into a personal arrival plan, with the official source on every step.
           </p>
-        </section>
-
-        <section className="ticket p-4">
-          <label className="flex cursor-pointer gap-3">
-            <input
-              type="checkbox"
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-              className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--ink)]"
-            />
-            <span className="text-[12px] leading-snug text-ink/85">
-              I agree that Dalil sends the document photo I choose to OpenAI, a service outside the United Arab Emirates, so that
-              it can be read. Dalil&apos;s server does not store the photo. OpenAI may keep abuse-monitoring logs for up to 30
-              days. I can withdraw this consent at any time on the Sources page, which deletes my data from this device.
-              Withdrawal cannot recall logs that OpenAI already holds.
-            </span>
-          </label>
-        </section>
-
-        <section className="space-y-3">
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            className="hidden"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              e.target.value = "";
-              if (f) run(() => extractFromFile(f, "admission_letter"), URL.createObjectURL(f));
-            }}
-          />
-          <div className="grid gap-3 sm:grid-cols-2">
-            <button disabled={!consent || busy} onClick={() => fileRef.current?.click()} className="btn btn-primary px-4 py-4 text-[15px]">
-              <Camera size={20} weight="bold" />
-              Scan my admission letter
-            </button>
-            <button
-              disabled={!consent || busy}
-              onClick={() => run(() => extractSample("admission_letter"), SAMPLES.admission_letter.image)}
-              className="btn btn-ghost px-4 py-4 text-[15px]"
-            >
-              <FileText size={20} weight="bold" />
-              Use the sample letter
-            </button>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link href="/start" className="btn btn-stamp px-6 py-4 text-[16px]">
+              Start with my letter
+              <ArrowRight size={19} weight="bold" />
+            </Link>
+            <Link href="/about" className="btn btn-ghost px-6 py-4 text-[16px]">
+              See the dataset
+            </Link>
           </div>
-          {!consent ? <p className="text-[12.5px] font-semibold text-muted">Tick the box above to continue.</p> : null}
-          <button
-            disabled={busy}
-            onClick={() => {
-              setResult(null);
-              setFlags([]);
-              setConf({});
-              setForm(form || EMPTY);
-            }}
-            className="text-[13px] font-bold text-ink underline decoration-ink/40 underline-offset-4 hover:decoration-ink"
-          >
-            Or type my details without a photo
-          </button>
-        </section>
-      </div>
+        </div>
 
-      {/* Right: the document stage. Idle shows the sample, busy shows the scan, then the form. */}
-      <div className="lg:pt-2">
-        {error ? (
-          <div className="mb-3">
-            <Flag flag={{ id: "unreadable", level: "amber", message: error }} />
+        {/* A boarding pass and the paper plane: the product's own objects, at scale */}
+        <div className="relative mx-auto w-full max-w-[560px] pt-36 pb-6 sm:pt-52" aria-hidden>
+          <div className="absolute top-0 right-0 z-10 origin-top-right scale-[0.68] text-ink sm:right-4 sm:scale-100">
+            <div className="fly-in">
+              <PlaneMark size={240} />
+            </div>
           </div>
-        ) : null}
-
-        {showForm ? (
-          <section className="pass rise p-5">
-            <div className="flex items-center justify-between gap-2">
-              <h2 className="font-display text-[20px] font-bold">Check your details</h2>
-              {result ? <StateLabel kind={result.source === "live" ? "live" : "saved_example"} /> : null}
-            </div>
-            {result?.source === "live" ? (
-              <p className="mt-1 text-[12.5px] text-muted">
-                Read by {result.model} in {(result.ms / 1000).toFixed(1)} s. Fields the model was less sure about are highlighted.
-                Edit anything that is wrong.
-              </p>
-            ) : result ? (
-              <p className="mt-1 text-[12.5px] text-muted">
-                The AI service did not answer, so these are the saved details of the synthetic sample letter. Edit anything that
-                is wrong.
-              </p>
-            ) : (
-              <p className="mt-1 text-[12.5px] text-muted">Type your details. Only your first name is sent to the AI model.</p>
-            )}
-
-            <div className="mt-3 space-y-2">
-              {flags.map((f) => (
-                <Flag key={f.id} flag={f} />
-              ))}
-            </div>
-
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              <Field label="Full name" low={low("fullName")}>
-                <input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} className={inputCls(low("fullName"))} />
-              </Field>
-              <Field label="Country you are coming from" low={low("country")}>
-                <input value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} className={inputCls(low("country"))} />
-              </Field>
-              <Field label="University" low={low("university")}>
-                <input value={form.university} onChange={(e) => setForm({ ...form, university: e.target.value })} className={inputCls(low("university"))} />
-              </Field>
-              <Field label="Program" low={low("program")}>
-                <input value={form.program} onChange={(e) => setForm({ ...form, program: e.target.value })} className={inputCls(low("program"))} />
-              </Field>
-              <Field
-                label="Arrival date"
-                low={low("arrivalDate")}
-                hint={result?.extraction.start_date ? `Suggested: 3 days before your start date (${result.extraction.start_date})` : undefined}
-              >
-                <input
-                  type="date"
-                  value={form.arrivalDate}
-                  onChange={(e) => setForm({ ...form, arrivalDate: e.target.value })}
-                  className={inputCls(low("arrivalDate"))}
-                />
-              </Field>
-              <Field label="Your language">
-                <select value={form.language} onChange={(e) => setForm({ ...form, language: e.target.value as Lang })} className={inputCls(false)}>
-                  {(Object.keys(LANG_LABELS) as Lang[]).map((l) => (
-                    <option key={l} value={l}>
-                      {LANG_LABELS[l]}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-            </div>
-            <button disabled={!ready} onClick={createPlan} className="btn btn-stamp mt-4 w-full px-4 py-4 text-[15px]">
-              Create my arrival plan
-              <ArrowRight size={18} weight="bold" />
-            </button>
-            {result ? (
-              <figure className="mt-4 border-t border-dashed border-ink/30 pt-3">
-                <figcaption className="mb-2 font-mono text-[9.5px] font-bold tracking-widest text-muted uppercase">The document Dalil read</figcaption>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={preview} alt="The document that was read" className="max-h-52 w-full rounded-md border border-ink/30 object-cover object-top" />
-              </figure>
-            ) : null}
-          </section>
-        ) : (
-          <section className="rise" aria-live="polite">
-            <div className={`ticket overflow-hidden p-2 ${busy ? "" : "lg:rotate-[1.2deg]"}`}>
-              <div className={busy ? "scan" : ""}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={preview}
-                  alt={busy ? "The document being read" : "Synthetic sample admission letter"}
-                  className={`max-h-[62dvh] w-full rounded-md object-cover object-top ${busy ? "" : "opacity-90"}`}
-                />
+          <div className="pass rise overflow-hidden lg:-rotate-2" style={{ "--i": 2 } as React.CSSProperties}>
+            <div className="flex items-center gap-4 px-5 py-5 sm:gap-6 sm:px-7">
+              <div>
+                <p className="font-mono text-[10px] font-bold tracking-widest text-muted uppercase">From</p>
+                <p className="font-mono text-[40px] leading-none font-bold tracking-tight sm:text-[54px]">HOME</p>
+              </div>
+              <div className="route flex-1" />
+              <div>
+                <p className="font-mono text-[10px] font-bold tracking-widest text-muted uppercase">To</p>
+                <p className="font-mono text-[40px] leading-none font-bold tracking-tight sm:text-[54px]">AUH</p>
               </div>
             </div>
-            {busy ? (
-              <p className="mt-3 text-[14px] font-extrabold">
-                Reading the letter with OpenAI vision <Dots />
-                <span className="mt-0.5 block text-[12px] font-medium text-muted">The photo is read in memory and is not stored on our server.</span>
-              </p>
-            ) : (
-              <p className="mt-3 text-[12.5px] text-muted">
-                A synthetic sample letter. Tick the consent box and use it to try Dalil without your own document.
-              </p>
-            )}
-          </section>
-        )}
-      </div>
+            <div className="grid grid-cols-3 border-t-2 border-dashed border-ink">
+              {[
+                ["Before you fly", "Visa, documents"],
+                ["First week", "Medical, Emirates ID"],
+                ["Build a future", "Golden Visa"],
+              ].map(([a, b], i) => (
+                <div key={a} className={`px-4 py-3.5 sm:px-5 ${i ? "border-l-2 border-dashed border-ink" : ""}`}>
+                  <p className="font-mono text-[9.5px] font-bold tracking-widest text-muted uppercase">{a}</p>
+                  <p className="mt-0.5 text-[12.5px] leading-snug font-bold">{b}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-t-[1.5px] border-ink bg-white/60 px-5 py-4 sm:px-7">
+              <span className="rubber stamp-in text-ok" style={{ "--r": "-5deg", "--i": 6 } as React.CSSProperties}>
+                Confirmed
+              </span>
+              <span className="rubber stamp-in text-stamp" style={{ "--r": "4deg", "--i": 9 } as React.CSSProperties}>
+                Dated 2018
+              </span>
+              <span className="text-[12px] font-semibold text-muted">Every step shows how well its source checked out.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works: three tickets */}
+      <section className="mx-auto w-full max-w-[1360px] px-6 pb-14 lg:px-12">
+        <ol className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {STEPS.map((s) => (
+            <li key={s.code} className="ticket flex">
+              <div className="flex w-[64px] shrink-0 flex-col items-center justify-center gap-2 py-5">
+                <span className="font-mono text-[13px] font-bold">{s.code}</span>
+                <s.icon size={24} weight="bold" className="text-flame" />
+              </div>
+              <div className="perforation flex-1 px-5 py-5">
+                <h2 className="font-display text-[21px] font-bold">{s.title}</h2>
+                <p className="mt-1.5 text-[14px] leading-relaxed text-ink/80">{s.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* The dataset, in three numbers */}
+      <section className="bg-ink text-card">
+        <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 gap-8 px-6 py-12 sm:grid-cols-3 lg:px-12">
+          {[
+            [String(KB.entries.length), "arrival steps, each traced to an official page and fact-checked"],
+            [String(REJECTED.length), "claims rejected, because the official page could not be opened"],
+            [String(Object.keys(LANG_LABELS).length), "languages for the plan and the answers"],
+          ].map(([n, label]) => (
+            <div key={label}>
+              <p className="font-mono text-[56px] leading-none font-bold text-flame">{n}</p>
+              <p className="mt-2 max-w-[30ch] text-[14.5px] leading-snug text-card/80">{label}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mx-auto flex w-full max-w-[1360px] flex-wrap items-center justify-between gap-3 border-t border-card/15 px-6 py-5 text-[12px] text-card/60 lg:px-12">
+          <span>Team 404, Hub71+ AI Hackathon supported by OpenAI, Abu Dhabi, 2 October 2026</span>
+          <span>AI-generated guidance. Not legal advice. Sample documents are synthetic.</span>
+        </div>
+      </section>
     </div>
-  );
-}
-
-function inputCls(low: boolean) {
-  return `field ${low ? "field-check" : ""}`;
-}
-
-function Field({ label, low, hint, children }: { label: string; low?: boolean; hint?: string; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-1 flex items-center justify-between font-mono text-[10px] font-bold tracking-wider text-muted uppercase">
-        {label}
-        {low ? <span className="text-gold">Please check</span> : null}
-      </span>
-      {children}
-      {hint ? <span className="mt-1 block text-[11px] text-muted">{hint}</span> : null}
-    </label>
   );
 }

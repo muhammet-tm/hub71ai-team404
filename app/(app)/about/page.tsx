@@ -154,7 +154,7 @@ export default function AboutPage() {
             <button
               onClick={() => {
                 store.deleteAll();
-                router.push("/");
+                router.push("/start");
               }}
               className="btn mt-3 w-full border-stamp bg-white px-4 py-3 text-[13.5px] text-stamp hover:shadow-[3px_3px_0_var(--stamp)]"
             >

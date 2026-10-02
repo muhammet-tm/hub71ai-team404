@@ -8,7 +8,7 @@ import { KB } from "@/lib/kb";
 import { DALIL_EVENT, store } from "@/lib/storage";
 
 const ITEMS = [
-  { href: "/", label: "Start", code: "01" },
+  { href: "/start", label: "Start", code: "01" },
   { href: "/plan", label: "My plan", code: "02" },
   { href: "/ask", label: "Ask", code: "03" },
   { href: "/about", label: "Sources", code: "04" },

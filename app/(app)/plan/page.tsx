@@ -42,7 +42,7 @@ export default function PlanPage() {
   useEffect(() => {
     const p = store.getProfile();
     if (!p) {
-      router.replace("/");
+      router.replace("/start");
       return;
     }
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -149,7 +149,7 @@ export default function PlanPage() {
                     <ArrowsClockwise size={12} weight="bold" />
                     Regenerate
                   </button>
-                  <Link href="/" className="text-[12px] font-bold underline decoration-ink/40 underline-offset-2 hover:decoration-ink">
+                  <Link href="/start" className="text-[12px] font-bold underline decoration-ink/40 underline-offset-2 hover:decoration-ink">
                     Edit details
                   </Link>
                 </div>
