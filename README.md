@@ -2,7 +2,7 @@
 
 Team 404 (Muhammet Yalkapov and Sulaymon Sadullo), Hub71+ AI Hackathon supported by OpenAI, 2 October 2026.
 
-Live demo: https://dalil-abudhabi.vercel.app (no login; tick the consent box and tap "Use the sample letter").
+Live demo: https://dalil-abudhabi.vercel.app (no login; press "Start with my letter", tick the consent box, and choose "Use the sample letter").
 
 ## What it does
 
@@ -24,6 +24,8 @@ The challenge is "How can we make it easier for people to arrive, settle in and 
 | New problem discovered | Students need guidance before they hold an Emirates ID. Several official pages could not be opened on the day, and the university's public visa form dates from 2018, so Dalil shows the age of every source instead of hiding it. |
 
 ## Screens
+
+![Landing](docs/screens/landing.png)
 
 ![Plan](docs/screens/plan.png)
 
@@ -76,7 +78,7 @@ Results of the live probes and the browser walkthrough are in section 8 of `docs
 ## Repository layout
 
 ```text
-app/            pages (/, /plan, /ask, /about) and API routes
+app/            landing page (/), product screens (/start, /plan, /ask, /about), and API routes
 components/     interface components
 lib/            types, prompts, schemas, validation, checks, marker parser
 data/           arrival_kb.json, the verified knowledge base
