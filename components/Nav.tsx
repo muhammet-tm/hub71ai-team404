@@ -87,7 +87,7 @@ export function MobileBars() {
     <>
       <header className="flex items-center justify-between border-b-[1.5px] border-ink bg-card px-5 py-3 lg:hidden">
         <Link href="/" aria-label="Dalil, start">
-          <Logo size={28} />
+          <Logo size={30} />
         </Link>
         <span className="font-mono text-[10px] font-bold tracking-widest text-muted uppercase">Abu Dhabi</span>
       </header>

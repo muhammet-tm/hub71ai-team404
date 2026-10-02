@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   if (typeof body.text !== "string" || !body.text.trim()) return apiError("bad_request", "No text to read.", "text_only");
   if (body.text.length > SPEECH_TEXT_CAP) return apiError("payload_too_large", "The text is too long to read aloud.", "text_only");
   if (!SPEECH_LANGS.includes(body.language as Lang))
-    return apiError("unsupported_language", "Speech is available in English and Russian only.", "text_only");
+    return apiError("unsupported_language", "Speech is available in English only.", "text_only");
 
   try {
     const res = await openai().audio.speech.create({

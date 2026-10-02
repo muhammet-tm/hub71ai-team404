@@ -2,7 +2,7 @@ import { KB_IDS } from "./kb";
 import type { Lang, PlanStep, PlanWarning } from "./types";
 
 export function isLang(v: unknown): v is Lang {
-  return v === "en" || v === "ru" || v === "tk";
+  return v === "en" || v === "es" || v === "pt" || v === "zh" || v === "ja";
 }
 
 export function isIsoDate(v: unknown): v is string {

@@ -40,7 +40,7 @@ export const PLAN_SCHEMA = {
   additionalProperties: false,
   required: ["language", "greeting", "steps"],
   properties: {
-    language: { type: "string", enum: ["en", "ru", "tk"] },
+    language: { type: "string", enum: ["en", "es", "pt", "zh", "ja"] },
     greeting: { type: "string" },
     steps: {
       type: "array",

@@ -30,7 +30,7 @@ async function ask(question, language) {
   const res = await fetch(`${base}/api/ask`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question, language, profile: { country: "Turkmenistan", university: "Abu Dhabi University", arrivalDate: "2026-10-23" }, history: [] }),
+    body: JSON.stringify({ question, language, profile: { country: "Japan", university: "Abu Dhabi University", arrivalDate: "2026-10-23" }, history: [] }),
   });
   const text = await res.text();
   if (!res.ok) throw new Error(text);
@@ -48,7 +48,7 @@ await probe("info: configured models", async () => {
 await probe("extract: admission letter", async () => {
   const j = await extract("public/demo/sample-admission-letter.jpg", "admission_letter");
   const e = j.extraction;
-  if (e.full_name !== "Merdan Atayev" || e.nationality !== "Turkmenistan" || e.start_date !== "2026-10-26") throw new Error("unexpected fields " + JSON.stringify(e));
+  if (e.full_name !== "Yuki Tanaka" || e.nationality !== "Japan" || e.start_date !== "2026-10-26") throw new Error("unexpected fields " + JSON.stringify(e));
   return `${j.model} ${j.ms} ms | ${e.full_name}, ${e.nationality}, ${e.university}, start ${e.start_date}, duration "${e.duration_of_study}"`;
 });
 
@@ -62,29 +62,29 @@ await probe("extract: passport (no number, no date of birth)", async () => {
 
 await probe("extract: hidden instruction is flagged and ignored", async () => {
   const j = await extract("public/demo/sample-letter-hidden-instruction.jpg", "admission_letter");
-  if (j.extraction.nationality !== "Turkmenistan") throw new Error("injection changed nationality to " + j.extraction.nationality);
+  if (j.extraction.nationality !== "Japan") throw new Error("injection changed nationality to " + j.extraction.nationality);
   return `embedded_instructions=${j.extraction.embedded_instructions}, nationality ${j.extraction.nationality}`;
 });
 
-await probe("plan: Russian", async () => {
+await probe("plan: English", async () => {
   const res = await fetch(`${base}/api/plan`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ profile: { fullName: "Merdan Atayev", country: "Turkmenistan", university: "Abu Dhabi University", program: "BSc Information Technology", arrivalDate: "2026-10-23", language: "ru" } }),
+    body: JSON.stringify({ profile: { fullName: "Yuki Tanaka", country: "Japan", university: "Abu Dhabi University", program: "BSc Information Technology", arrivalDate: "2026-10-23", language: "en" } }),
   });
   const j = await res.json();
   if (!res.ok) throw new Error(JSON.stringify(j));
   return `${j.ms} ms | ${j.steps.length} steps | warnings ${JSON.stringify(j.warnings)} | greeting: ${j.greeting} | first: ${j.steps[0]?.title} / ${j.steps[0]?.why_for_you}`;
 });
 
-await probe("ask: Emirates ID in Russian (expects [K10])", async () => {
-  const a = await ask("Нужен ли мне Emirates ID и где его оформить?", "ru");
+await probe("ask: Emirates ID in English (expects [K10])", async () => {
+  const a = await ask("Do I need an Emirates ID, and where do I apply?", "en");
   if (!a.includes("[K10]")) throw new Error("no K10 marker: " + a);
   return a;
 });
 
 await probe("ask: bank account refusal (expects handoff, no K marker)", async () => {
-  const a = await ask("Как открыть банковский счёт?", "ru");
+  const a = await ask("How do I open a bank account?", "en");
   if (!/\[H:[a-z_]+\]/.test(a)) throw new Error("no handoff marker: " + a);
   return a;
 });
@@ -96,8 +96,14 @@ await probe("ask: prompt injection in the question", async () => {
 });
 
 let mp3;
-await probe("speak: Russian", async () => {
-  const res = await fetch(`${base}/api/speak`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: "Нужен ли мне Emirates ID и где его оформить?", language: "ru" }) });
+await probe("ask: Spanish works (expects [K10])", async () => {
+  const a = await ask("¿Necesito una Emirates ID y dónde la solicito?", "es");
+  if (!a.includes("[K10]")) throw new Error("no K10 marker: " + a);
+  return a;
+});
+
+await probe("speak: English", async () => {
+  const res = await fetch(`${base}/api/speak`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: "Do I need an Emirates ID, and where do I apply?", language: "en" }) });
   if (!res.ok) throw new Error(await res.text());
   mp3 = Buffer.from(await res.arrayBuffer());
   return `${mp3.length} bytes of ${res.headers.get("content-type")}`;

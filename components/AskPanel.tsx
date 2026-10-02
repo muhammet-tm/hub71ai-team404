@@ -20,9 +20,11 @@ type Message = {
 };
 
 const SUGGESTIONS: Record<Lang, string[]> = {
-  ru: ["Нужен ли мне Emirates ID и где его оформить?", "Как добраться из аэропорта в город?", "Как открыть банковский счёт?"],
   en: ["Do I need an Emirates ID, and where do I apply?", "How do I get from the airport to the city?", "How do I open a bank account?"],
-  tk: ["Emirates ID gerekmi we nirede almaly?", "Howa menzilinden şähere nädip barmaly?", "Bank hasabyny nädip açmaly?"],
+  es: ["¿Necesito una Emirates ID y dónde la solicito?", "¿Cómo llego del aeropuerto a la ciudad?", "¿Cómo abro una cuenta bancaria?"],
+  pt: ["Preciso de uma Emirates ID e onde a solicito?", "Como vou do aeroporto para a cidade?", "Como abro uma conta bancária?"],
+  zh: ["我需要办理 Emirates ID 吗？在哪里申请？", "从机场怎么去市区？", "怎么开银行账户？"],
+  ja: ["Emirates ID は必要ですか。どこで申請しますか。", "空港から市内へはどう行きますか。", "銀行口座はどう開設しますか。"],
 };
 
 /**
@@ -32,7 +34,7 @@ const SUGGESTIONS: Record<Lang, string[]> = {
 export default function AskPanel({ variant }: { variant: "page" | "dock" }) {
   const dock = variant === "dock";
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [lang, setLang] = useState<Lang>("ru");
+  const [lang, setLang] = useState<Lang>("en");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -287,7 +289,7 @@ export default function AskPanel({ variant }: { variant: "page" | "dock" }) {
                 {recording ? "Stop" : transcribing ? "Transcribing…" : "Speak"}
               </button>
             ) : (
-              <span className="text-[11px] text-muted">Voice works in English and Russian</span>
+              <span className="text-[11px] text-muted">Voice works in English</span>
             )}
             <span className="font-mono text-[10.5px] text-muted">
               {input.length}/{QUESTION_CAP}

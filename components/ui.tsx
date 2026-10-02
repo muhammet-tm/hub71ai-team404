@@ -80,9 +80,9 @@ export function StateLabel({ kind }: { kind: "live" | "standard_plan" | "saved_e
 export function Dots() {
   return (
     <span className="inline-flex gap-1 align-middle" aria-hidden>
-      <span className="dot h-1.5 w-1.5 rounded-full bg-stamp" />
-      <span className="dot h-1.5 w-1.5 rounded-full bg-stamp [animation-delay:0.2s]" />
-      <span className="dot h-1.5 w-1.5 rounded-full bg-stamp [animation-delay:0.4s]" />
+      <span className="dot h-1.5 w-1.5 rounded-full bg-flame" />
+      <span className="dot h-1.5 w-1.5 rounded-full bg-flame [animation-delay:0.2s]" />
+      <span className="dot h-1.5 w-1.5 rounded-full bg-flame [animation-delay:0.4s]" />
     </span>
   );
 }

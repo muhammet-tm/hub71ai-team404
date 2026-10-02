@@ -10,7 +10,7 @@ import { LANG_LABELS } from "@/lib/config";
 import { store } from "@/lib/storage";
 import type { CheckFlag, Confidence, ExtractResponse, Lang, Profile } from "@/lib/types";
 
-const EMPTY: Profile = { fullName: "", country: "", university: "", program: "", arrivalDate: "", language: "ru" };
+const EMPTY: Profile = { fullName: "", country: "", university: "", program: "", arrivalDate: "", language: "en" };
 
 function minusDays(iso: string, days: number): string {
   const d = new Date(iso + "T00:00:00Z");
@@ -58,7 +58,7 @@ export default function StartPage() {
       university: ex.university,
       program: ex.program,
       arrivalDate: arrival,
-      language: form?.language || "ru",
+      language: form?.language || "en",
     });
   }
 

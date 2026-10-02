@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AirplaneTilt, ArrowUpRight, ArrowsClockwise, ChatsCircle } from "@phosphor-icons/react";
+import { ArrowUpRight, ArrowsClockwise, ChatsCircle } from "@phosphor-icons/react";
 import AskPanel from "@/components/AskPanel";
+import { PlaneMark } from "@/components/Logo";
 import PassportCheck from "@/components/PassportCheck";
 import { Dots, HandoffLink, SourceLink, StateLabel, StatusStamp } from "@/components/ui";
 import { matchBuddy } from "@/lib/buddies";
@@ -99,9 +100,9 @@ export default function PlanPage() {
               </div>
               <div className="relative flex-1" aria-hidden>
                 <div className="route" />
-                <div className="fly absolute inset-x-0 -top-3 flex justify-end">
+                <div className="fly absolute inset-x-0 -top-4 flex justify-end">
                   <span className="bg-card px-1.5">
-                    <AirplaneTilt size={24} weight="fill" className="text-stamp" />
+                    <PlaneMark size={30} trail={false} />
                   </span>
                 </div>
               </div>

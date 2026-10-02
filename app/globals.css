@@ -2,19 +2,20 @@
 
 /* Dalil, "Passport" direction: paper, ink, and rubber stamps. One theme, light, locked. */
 :root {
-  --paper: #efe6d2;
-  --card: #fbf6ea;
-  --ink: #1b2540;
-  --ink-soft: #2c3759;
-  --muted: #625c4c;
-  --line: #cfc5ad;
-  --stamp: #b83a24;
-  --stamp-soft: #f8e2dc;
+  --paper: #f5e8d9;
+  --card: #fdf5ec;
+  --ink: #0d2433;
+  --ink-soft: #1c3a4d;
+  --muted: #6a5a4c;
+  --line: #dcc9b4;
+  --stamp: #a23617;
+  --flame: #df5527;
+  --stamp-soft: #fbe3d8;
   --ok: #26694a;
   --ok-soft: #dfecdc;
   --gold: #a26a12;
   --gold-soft: #f7e7c2;
-  --gold-bright: #e0a43a;
+  --gold-bright: #f47a4a;
   --ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
@@ -26,6 +27,7 @@
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-stamp: var(--stamp);
+  --color-flame: var(--flame);
   --color-stamp-soft: var(--stamp-soft);
   --color-ok: var(--ok);
   --color-ok-soft: var(--ok-soft);
@@ -35,6 +37,7 @@
   --font-sans: var(--font-body), system-ui, sans-serif;
   --font-display: var(--font-display-latin), var(--font-body), system-ui, sans-serif;
   --font-mono: var(--font-mono-code), ui-monospace, monospace;
+  --font-wordmark: var(--font-wordmark-latin), var(--font-display-latin), system-ui, sans-serif;
 }
 
 html {
@@ -44,7 +47,7 @@ html {
 
 body {
   background-color: var(--paper);
-  background-image: radial-gradient(#d8cdb2 1px, transparent 1px);
+  background-image: radial-gradient(#e4d2bd 1px, transparent 1px);
   background-size: 14px 14px;
   color: var(--ink);
   font-family: var(--font-body), system-ui, sans-serif;
@@ -59,7 +62,7 @@ textarea {
 }
 
 :focus-visible {
-  outline: 2.5px solid var(--stamp);
+  outline: 2.5px solid var(--flame);
   outline-offset: 2px;
 }
 
@@ -228,7 +231,7 @@ textarea {
   position: absolute;
   inset: 0 0 auto 0;
   height: 4%;
-  background: linear-gradient(180deg, transparent, rgba(184, 58, 36, 0.35) 60%, var(--stamp));
+  background: linear-gradient(180deg, transparent, rgba(223, 85, 39, 0.35) 60%, var(--flame));
   animation: scan 1600ms linear infinite;
 }
 

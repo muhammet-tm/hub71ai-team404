@@ -6,7 +6,9 @@ const ISO3: Record<string, string> = {
   sudan: "SDN", morocco: "MAR", algeria: "DZA", tunisia: "TUN", libya: "LBY", nigeria: "NGA", kenya: "KEN",
   ethiopia: "ETH", china: "CHN", philippines: "PHL", indonesia: "IDN", malaysia: "MYS", turkey: "TUR", "türkiye": "TUR",
   "saudi arabia": "SAU", oman: "OMN", kuwait: "KWT", bahrain: "BHR", qatar: "QAT", "united states": "USA",
-  "united kingdom": "GBR", france: "FRA", germany: "DEU", canada: "CAN",
+  "united kingdom": "GBR", france: "FRA", germany: "DEU", canada: "CAN", japan: "JPN", "south korea": "KOR",
+  brazil: "BRA", colombia: "COL", mexico: "MEX", argentina: "ARG", chile: "CHL", peru: "PER", vietnam: "VNM",
+  thailand: "THA",
 };
 
 export function countryCode(country: string): string {

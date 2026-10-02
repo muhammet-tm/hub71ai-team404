@@ -1,9 +1,9 @@
 // Team design parameters (docs/03, section 5.3). Not sourced facts; tuned from measurements.
 import type { Lang } from "./types";
 
-export const LANG_NAMES: Record<Lang, string> = { en: "English", ru: "Russian", tk: "Turkmen" };
-export const LANG_LABELS: Record<Lang, string> = { en: "English", ru: "Русский", tk: "Türkmençe" };
-export const SPEECH_LANGS: Lang[] = ["en", "ru"]; // Turkmen is not on the documented speech list
+export const LANG_NAMES: Record<Lang, string> = { en: "English", es: "Spanish", pt: "Portuguese", zh: "Simplified Chinese", ja: "Japanese" };
+export const LANG_LABELS: Record<Lang, string> = { en: "English", es: "Español", pt: "Português", zh: "中文", ja: "日本語" };
+export const SPEECH_LANGS: Lang[] = ["en"]; // voice was tested end to end in English only
 
 export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024; // below the 4.5 MB Vercel function body limit
 export const IMAGE_LONG_EDGE = 1600;
