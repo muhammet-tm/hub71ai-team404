@@ -52,17 +52,6 @@ The challenge is "How can we make it easier for people to arrive, settle in and 
 | Answer questions | `OPENAI_MODEL`, streamed, after `omni-moderation-latest` |
 | Voice input and output | `gpt-4o-transcribe` and `gpt-4o-mini-tts` |
 
-## Run locally
-
-```bash
-npm install
-echo "OPENAI_API_KEY=your-key" > .env.local
-npm run build && npx next start -p 3210
-node scripts/smoke.mjs http://localhost:3210
-```
-
-Optional variables: `OPENAI_MODEL`, `OPENAI_VISION_MODEL`, and `ASK_STREAM=0` for non-streamed answers.
-
 ## Test results
 
 Results of the live probes and the browser walkthrough are in section 8 of `docs/Dalil_Report.pdf`.
