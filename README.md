@@ -19,7 +19,7 @@ The challenge is "How can we make it easier for people to arrive, settle in and 
 | Use of OpenAI tooling | Vision with Structured Outputs reads documents, a structured call personalizes the plan, a streamed call answers questions, moderation screens input, and speech models handle voice. See `lib/openai.ts`, `lib/schemas.ts`, `lib/prompts.ts`. |
 | Clarity of demo | One journey: letter, plan, passport flag, sourced answer, labeled general guidance. |
 | Differentiation | The model selects and translates; a verified file states the facts. The model never writes a fee, a deadline, or a link. |
-| Unique dataset | `data/arrival_kb.json`: 19 arrival steps, each traced to an official page and labeled with the result of an independent fact-check. The evidence behind it, including the claims that were rejected, is in `docs/evidence/`. |
+| Unique dataset | `data/arrival_kb.json`: 19 arrival steps, each traced to an official page and labeled with the result of an independent fact-check. The evidence behind it, including the claims that were rejected, is in `docs/evidence/`. The Sources page offers the dataset as a CSV download (`/api/dataset/csv`) and as a printable page that saves as a PDF (`/dataset/print`). |
 | Unique UI | The plan is a boarding pass and a set of tickets. Each step carries a rubber stamp that shows its fact-check status, and ticking a step stamps it done. A document scanner fills the form, a passport flag is computed in code, and the assistant sits beside the plan on wide screens. |
 | New problem discovered | Students need guidance before they hold an Emirates ID. Several official pages could not be opened on the day, and the university's public visa form dates from 2018, so Dalil shows the age of every source instead of hiding it. |
 

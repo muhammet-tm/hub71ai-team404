@@ -303,3 +303,16 @@ textarea {
     animation: none;
   }
 }
+
+/* Print: plain white paper, no dotted background, sensible margins. */
+@page {
+  margin: 14mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    background-image: none !important;
+  }
+}

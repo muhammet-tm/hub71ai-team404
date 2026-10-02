@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowUpRight, Trash } from "@phosphor-icons/react";
+import { ArrowUpRight, DownloadSimple, Printer, Trash } from "@phosphor-icons/react";
 import { StatusStamp } from "@/components/ui";
 import { REJECTED } from "@/lib/dataset";
 import { KB } from "@/lib/kb";
@@ -67,10 +67,24 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-          <a href="/api/dataset" target="_blank" rel="noopener noreferrer" className="btn btn-ghost mt-4 w-full px-3 py-3 text-[13.5px]">
-            Open the full dataset (JSON)
-            <ArrowUpRight size={15} weight="bold" />
-          </a>
+          <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+            <a href="/api/dataset/csv" download className="btn btn-primary px-3 py-3 text-[13.5px]">
+              <DownloadSimple size={16} weight="bold" />
+              Download as CSV
+            </a>
+            <a href="/dataset/print" target="_blank" rel="noopener noreferrer" className="btn btn-ghost px-3 py-3 text-[13.5px]">
+              <Printer size={16} weight="bold" />
+              Printable PDF
+            </a>
+          </div>
+          <p className="mt-2 text-[11.5px] text-muted">
+            The CSV opens in Excel or Google Sheets. The printable page saves as a PDF from the print dialog. Developers can also
+            read the{" "}
+            <a href="/api/dataset" target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-2">
+              JSON
+            </a>
+            .
+          </p>
           <ul className="mt-4 divide-y divide-dashed divide-ink/30">
             {KB.entries.map((e) => (
               <li key={e.id} className="flex items-center gap-3 py-2.5">
