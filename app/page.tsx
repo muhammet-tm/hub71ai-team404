@@ -181,10 +181,15 @@ export default function StartPage() {
             <h2 className="text-[16px] font-extrabold">Check your details</h2>
             {result ? <StateLabel kind={result.source === "live" ? "live" : "saved_example"} /> : null}
           </div>
-          {result ? (
+          {result?.source === "live" ? (
             <p className="text-[12px] text-muted">
               Read by {result.model} in {(result.ms / 1000).toFixed(1)} s. Fields the model was less sure about are outlined. Edit
               anything that is wrong.
+            </p>
+          ) : result ? (
+            <p className="text-[12px] text-muted">
+              The AI service did not answer, so these are the saved details of the synthetic sample letter. Edit anything that is
+              wrong.
             </p>
           ) : (
             <p className="text-[12px] text-muted">Type your details. Only your first name is sent to the AI model.</p>
