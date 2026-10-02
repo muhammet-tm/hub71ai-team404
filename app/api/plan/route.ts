@@ -48,6 +48,7 @@ export async function POST(request: Request) {
       steps,
       warnings,
       ms: Date.now() - started,
+      model: MODEL,
     };
     return Response.json(result);
   } catch (err) {

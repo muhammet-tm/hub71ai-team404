@@ -34,6 +34,7 @@ async function ask(question, language) {
   });
   const text = await res.text();
   if (!res.ok) throw new Error(text);
+  if (text.includes("[ERROR]") || !text.trim()) throw new Error("stream failed: " + text);
   return text;
 }
 

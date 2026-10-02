@@ -1,21 +1,34 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { StatusBadge } from "@/components/ui";
 import { KB } from "@/lib/kb";
 import { store } from "@/lib/storage";
 
-const MODELS = [
-  ["Reads the admission letter and the passport", "gpt-6.1-sol vision, Structured Outputs"],
-  ["Personalizes and translates the plan", "gpt-6.1-sol, Structured Outputs"],
-  ["Answers questions from the verified sources", "gpt-6.1-sol, streaming"],
-  ["Screens every question", "omni-moderation-latest"],
-  ["Turns speech into text", "gpt-transcribe"],
-  ["Reads answers aloud", "gpt-4o-mini-tts"],
-];
+type Info = { text: string; vision: string; moderation: string; transcribe: string; speech: string };
+
+function modelRows(i: Info | null): [string, string][] {
+  const text = i?.text || "OpenAI text model";
+  return [
+    ["Reads the admission letter and the passport", `${i?.vision || "OpenAI vision model"} · vision`],
+    ["Personalizes and translates the plan", `${text} · structured`],
+    ["Answers questions from the verified sources", `${text} · streaming`],
+    ["Screens every question", i?.moderation || "omni-moderation-latest"],
+    ["Turns speech into text", i?.transcribe || "gpt-transcribe"],
+    ["Reads answers aloud", i?.speech || "gpt-4o-mini-tts"],
+  ];
+}
 
 export default function AboutPage() {
   const router = useRouter();
+  const [info, setInfo] = useState<Info | null>(null);
+  useEffect(() => {
+    fetch("/api/info")
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setInfo)
+      .catch(() => {});
+  }, []);
   return (
     <div className="space-y-6">
       <section className="rise pt-2">
@@ -71,7 +84,7 @@ export default function AboutPage() {
       <section>
         <h2 className="text-[15px] font-extrabold">OpenAI models at work</h2>
         <ul className="mt-2 divide-y divide-line rounded-2xl border border-line">
-          {MODELS.map(([what, model]) => (
+          {modelRows(info).map(([what, model]) => (
             <li key={what} className="flex items-center justify-between gap-3 px-3 py-2.5 text-[12.5px]">
               <span>{what}</span>
               <code className="shrink-0 rounded bg-sand px-1.5 py-0.5 text-[11px] font-bold">{model}</code>
@@ -99,10 +112,17 @@ export default function AboutPage() {
         </button>
       </section>
 
-      <section className="pb-2 text-[12px] text-muted">
+      <section className="text-[12px] text-muted">
         Found a wrong or outdated step? Tell the Dalil team or your university&apos;s international office, and always confirm
-        with the official source linked on the step. Built by Muhammet Yalkapov and Sulaymon Sadullo for the Hub71+ AI Hackathon
-        supported by OpenAI.
+        with the official source linked on the step.
+      </section>
+
+      <section className="rounded-2xl bg-ink p-4 text-white">
+        <p className="text-[11px] font-bold tracking-widest text-white/60 uppercase">Built by</p>
+        <p className="mt-1 text-[18px] font-extrabold">Team 404</p>
+        <p className="text-[12.5px] font-semibold text-white/80">International students building for the next ones to arrive</p>
+        <p className="mt-2 text-[13.5px] font-bold">Muhammet Yalkapov · Sulaymon Sadullo</p>
+        <p className="mt-1 text-[11.5px] text-white/60">Hub71+ AI Hackathon supported by OpenAI, Abu Dhabi, 2 October 2026</p>
       </section>
     </div>
   );

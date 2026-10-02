@@ -101,6 +101,7 @@ export type PlanResult = {
   steps: PlanStep[];
   warnings: PlanWarning[];
   ms?: number;
+  model?: string;
 };
 
 export type ChatTurn = { role: "user" | "assistant"; content: string };

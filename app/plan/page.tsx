@@ -109,7 +109,9 @@ export default function PlanPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <StateLabel kind={plan.source} />
                 {plan.source === "live" && plan.ms ? (
-                  <span className="text-[11px] text-muted">gpt-6.1-sol · {(plan.ms / 1000).toFixed(1)} s</span>
+                  <span className="text-[11px] text-muted">
+                    {plan.model || "OpenAI"} · {(plan.ms / 1000).toFixed(1)} s
+                  </span>
                 ) : null}
                 <button onClick={regenerate} className="text-[11px] font-bold text-teal underline underline-offset-2">
                   Regenerate
