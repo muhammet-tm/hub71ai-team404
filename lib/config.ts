@@ -1,8 +1,8 @@
 // Team design parameters (docs/03, section 5.3). Not sourced facts; tuned from measurements.
 import type { Lang } from "./types";
 
-export const LANG_NAMES: Record<Lang, string> = { en: "English", ru: "Russian", es: "Spanish", pt: "Portuguese", zh: "Simplified Chinese", ja: "Japanese" };
-export const LANG_LABELS: Record<Lang, string> = { en: "English", ru: "Русский", es: "Español", pt: "Português", zh: "中文", ja: "日本語" };
+export const LANG_NAMES: Record<Lang, string> = { en: "English", ar: "Arabic", ru: "Russian", es: "Spanish", pt: "Portuguese", zh: "Simplified Chinese", ja: "Japanese" };
+export const LANG_LABELS: Record<Lang, string> = { en: "English", ar: "العربية", ru: "Русский", es: "Español", pt: "Português", zh: "中文", ja: "日本語" };
 export const SPEECH_LANGS: Lang[] = ["en", "ru"]; // voice was tested end to end in English and Russian
 
 export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024; // below the 4.5 MB Vercel function body limit

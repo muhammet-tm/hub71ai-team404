@@ -21,6 +21,7 @@ type Message = {
 
 const SUGGESTIONS: Record<Lang, string[]> = {
   en: ["Do I need an Emirates ID, and where do I apply?", "How do I get from the airport to the city?", "How do I open a bank account?"],
+  ar: ["هل أحتاج إلى الهوية الإماراتية، وأين أتقدم بطلبها؟", "كيف أصل من المطار إلى المدينة؟", "كيف أفتح حسابًا مصرفيًا؟"],
   ru: ["Нужен ли мне Emirates ID и где его оформить?", "Как добраться из аэропорта в город?", "Как открыть банковский счёт?"],
   es: ["¿Necesito una Emirates ID y dónde la solicito?", "¿Cómo llego del aeropuerto a la ciudad?", "¿Cómo abro una cuenta bancaria?"],
   pt: ["Preciso de uma Emirates ID e onde a solicito?", "Como vou do aeroporto para a cidade?", "Como abro uma conta bancária?"],
@@ -221,6 +222,7 @@ export default function AskPanel({ variant }: { variant: "page" | "dock" }) {
             {SUGGESTIONS[lang].map((s, i) => (
               <button
                 key={s}
+                dir="auto"
                 onClick={() => ask(s)}
                 style={{ "--i": i } as React.CSSProperties}
                 className="rise block w-full rounded-lg border-[1.5px] border-ink bg-card px-3.5 py-3 text-left text-[13.5px] font-bold transition-transform duration-150 hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--ink)]"
@@ -233,7 +235,7 @@ export default function AskPanel({ variant }: { variant: "page" | "dock" }) {
 
         {messages.map((m, i) =>
           m.role === "user" ? (
-            <div key={i} className="ml-8 rounded-xl rounded-br-sm bg-ink px-4 py-3 text-[14px] leading-snug font-semibold text-card">
+            <div key={i} dir="auto" className="ml-8 rounded-xl rounded-br-sm bg-ink px-4 py-3 text-[14px] leading-snug font-semibold text-card">
               {m.raw}
             </div>
           ) : (
@@ -265,6 +267,7 @@ export default function AskPanel({ variant }: { variant: "page" | "dock" }) {
           className={dock ? "" : "pass p-2.5"}
         >
           <textarea
+            dir="auto"
             value={input}
             onChange={(e) => setInput(e.target.value.slice(0, QUESTION_CAP))}
             onKeyDown={(e) => {
@@ -336,7 +339,7 @@ function Answer({ msg, canVoice, onListen }: { msg: Message; canVoice: boolean; 
   return (
     <div className="mr-2 space-y-2.5 rounded-xl rounded-bl-sm border-[1.5px] border-ink bg-white px-4 py-3">
       {parsed.text ? (
-        <p className="text-[14px] leading-relaxed whitespace-pre-wrap">{parsed.text}</p>
+        <p dir="auto" className="text-[14px] leading-relaxed whitespace-pre-wrap">{parsed.text}</p>
       ) : (
         <p className="text-[13px] font-bold">
           Checking verified sources <Dots />

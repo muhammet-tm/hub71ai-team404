@@ -153,7 +153,7 @@ export default function PlanPage() {
                     Edit details
                   </Link>
                 </div>
-                {plan.greeting ? <p className="text-[15px] leading-snug font-bold">{plan.greeting}</p> : null}
+                {plan.greeting ? <p dir="auto" className="text-[15px] leading-snug font-bold">{plan.greeting}</p> : null}
                 {plan.source === "standard_plan" ? (
                   <p className="text-[12.5px] text-muted">
                     The AI service did not answer in time, so this is the standard plan in English from the verified sources.
@@ -327,7 +327,7 @@ function StepTicket({
         </p>
 
         {step?.why_for_you ? (
-          <p className="rise mt-2.5 rounded-md bg-ok-soft px-3 py-2 text-[13px] leading-snug">
+          <p dir="auto" className="rise mt-2.5 rounded-md bg-ok-soft px-3 py-2 text-[13px] leading-snug">
             {step.why_for_you}
             <span className="ml-1.5 align-middle font-mono text-[9px] font-bold tracking-wide text-ok uppercase">AI-written</span>
           </p>
