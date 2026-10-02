@@ -1,4 +1,4 @@
-export type Lang = "en" | "es" | "pt" | "zh" | "ja";
+export type Lang = "en" | "ru" | "es" | "pt" | "zh" | "ja";
 
 export type Profile = {
   fullName: string; // stays on the device; only the given name is sent to the model

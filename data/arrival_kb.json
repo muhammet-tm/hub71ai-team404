@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-02.1",
+  "version": "2026-10-02.2",
   "generatedFrom": [
     "official-procedures.md",
     "abu-dhabi-context.md"
@@ -490,6 +490,40 @@
         "после учебы"
       ],
       "evidenceRef": "official-procedures.md"
+    },
+    {
+      "id": "K19",
+      "phase": 3,
+      "order": 4,
+      "offsetDays": 16,
+      "timingBasis": "suggested_order",
+      "title": "Get a student bank card (ADIB ISIC)",
+      "fact": "For everyday banking, students can get the ISIC Prepaid Card from Abu Dhabi Islamic Bank (ADIB): a student payment card that carries the international ISIC discount scheme, with more than 125,000 discounts in 130 countries. It is open to students who are UAE nationals or residents, and its balance is loaded from an ADIB account. Apply online or visit an ADIB branch with your original passport, Emirates ID, two passport-sized photos with a white background, and your university ID.",
+      "fee": "Zero fees on deposits and withdrawals at ADIB ATMs; the page states no other fees",
+      "sourceName": "ADIB, ISIC Prepaid Card",
+      "sourceUrl": "https://www.adib.ae/en/personal/cards/adib-isic-prepaid-card",
+      "status": "confirmed",
+      "caveat": "You need your Emirates ID first. It is a prepaid card, so ask the ADIB branch about the account that loads it. Other banks were not checked.",
+      "handoff": "none",
+      "keywords": [
+        "bank",
+        "account",
+        "card",
+        "debit",
+        "prepaid",
+        "isic",
+        "adib",
+        "discount",
+        "money",
+        "atm",
+        "банк",
+        "счёт",
+        "счет",
+        "карта",
+        "скидки",
+        "деньги"
+      ],
+      "evidenceRef": "ADIB official page, opened 2 October 2026"
     }
   ]
 }

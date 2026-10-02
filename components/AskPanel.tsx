@@ -21,6 +21,7 @@ type Message = {
 
 const SUGGESTIONS: Record<Lang, string[]> = {
   en: ["Do I need an Emirates ID, and where do I apply?", "How do I get from the airport to the city?", "How do I open a bank account?"],
+  ru: ["Нужен ли мне Emirates ID и где его оформить?", "Как добраться из аэропорта в город?", "Как открыть банковский счёт?"],
   es: ["¿Necesito una Emirates ID y dónde la solicito?", "¿Cómo llego del aeropuerto a la ciudad?", "¿Cómo abro una cuenta bancaria?"],
   pt: ["Preciso de uma Emirates ID e onde a solicito?", "Como vou do aeroporto para a cidade?", "Como abro uma conta bancária?"],
   zh: ["我需要办理 Emirates ID 吗？在哪里申请？", "从机场怎么去市区？", "怎么开银行账户？"],
@@ -210,7 +211,7 @@ export default function AskPanel({ variant }: { variant: "page" | "dock" }) {
           </select>
         </div>
         <p className={`mt-1 leading-snug text-muted ${dock ? "text-[12px]" : "max-w-[60ch] text-[14px]"}`}>
-          Answers come only from the verified sources. When no source covers a question, Dalil says so and names the office to ask.
+          Dalil answers from verified sources first. Anything beyond them is labeled as general guidance, with the office to confirm it.
         </p>
       </div>
 
@@ -289,7 +290,7 @@ export default function AskPanel({ variant }: { variant: "page" | "dock" }) {
                 {recording ? "Stop" : transcribing ? "Transcribing…" : "Speak"}
               </button>
             ) : (
-              <span className="text-[11px] text-muted">Voice works in English</span>
+              <span className="text-[11px] text-muted">Voice works in English and Russian</span>
             )}
             <span className="font-mono text-[10.5px] text-muted">
               {input.length}/{QUESTION_CAP}
@@ -330,7 +331,7 @@ function Answer({ msg, canVoice, onListen }: { msg: Message; canVoice: boolean; 
   const streaming = msg.state === "streaming";
   const parsed = parseAnswer(msg.raw, !streaming);
   const cited = parsed.kbIds.map((id) => byId(id)).filter((e): e is KbEntry => !!e);
-  const unverified = !streaming && cited.length === 0 && parsed.handoffs.length === 0;
+  const unverified = !streaming && cited.length === 0 && parsed.handoffs.length === 0 && !parsed.general;
 
   return (
     <div className="mr-2 space-y-2.5 rounded-xl rounded-bl-sm border-[1.5px] border-ink bg-white px-4 py-3">
@@ -348,9 +349,11 @@ function Answer({ msg, canVoice, onListen }: { msg: Message; canVoice: boolean; 
         </p>
       ) : null}
 
-      {!streaming && parsed.handoffs.length > 0 && cited.length === 0 ? (
+      {!streaming && (parsed.general || (parsed.handoffs.length > 0 && cited.length === 0)) ? (
         <p className="rounded-lg border border-gold bg-gold-soft px-3 py-2 text-[12px] font-bold text-gold">
-          No verified source covers this question, so Dalil did not guess.
+          {cited.length > 0
+            ? "Part of this answer is general guidance, not from a verified source. Confirm it before you act."
+            : "General guidance. No verified source covers this question, so confirm it before you act."}
         </p>
       ) : null}
 

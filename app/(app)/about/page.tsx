@@ -99,7 +99,7 @@ export default function AboutPage() {
             <ul className="mt-2 space-y-1.5 text-[13px] leading-snug">
               <li>The AI model selects steps and writes in your language. It never writes a fee, a deadline, or a link.</li>
               <li>Every fact, fee, and link on screen comes from the {KB.entries.length} entries in the dataset.</li>
-              <li>When no entry covers a question, Dalil says so and names the office to ask.</li>
+              <li>When no entry covers a question, Dalil gives general guidance, labels it as unverified, and names the office to confirm it.</li>
               <li>Dates on the plan are a suggested order unless a card says &quot;Sourced deadline&quot;.</li>
             </ul>
           </section>
@@ -122,7 +122,7 @@ export default function AboutPage() {
           <section className="ticket p-4">
             <h2 className="font-display text-[17px] font-bold">What Dalil does not cover</h2>
             <ul className="mt-2 space-y-1.5 text-[13px] leading-snug">
-              <li>Bank accounts, current university fees, and the entry permit procedure.</li>
+              <li>How to open a bank account, current university fees, and the entry permit procedure.</li>
               <li>Government fees for the student visa, the medical test, and the Emirates ID.</li>
               <li>Whether a document is genuine, and whether you are eligible for a visa.</li>
             </ul>

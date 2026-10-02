@@ -8,7 +8,7 @@ import { LANG_LABELS } from "@/lib/config";
 const STEPS = [
   { code: "01", icon: Camera, title: "Scan your letter", text: "Photograph your admission letter. OpenAI vision reads it, and you confirm every field." },
   { code: "02", icon: Ticket, title: "Get your plan", text: "Every step from visa to Emirates ID, in order, each stamped with its official source." },
-  { code: "03", icon: ChatsCircle, title: "Ask anything", text: "Answers come from verified sources only. When none exists, Dalil says so." },
+  { code: "03", icon: ChatsCircle, title: "Ask anything", text: "Verified sources come first. Anything beyond them is labeled as general guidance." },
 ];
 
 export default function LandingPage() {

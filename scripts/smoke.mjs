@@ -83,9 +83,16 @@ await probe("ask: Emirates ID in English (expects [K10])", async () => {
   return a;
 });
 
-await probe("ask: bank account refusal (expects handoff, no K marker)", async () => {
+await probe("ask: bank account (expects the ADIB entry [K19])", async () => {
   const a = await ask("How do I open a bank account?", "en");
-  if (!/\[H:[a-z_]+\]/.test(a)) throw new Error("no handoff marker: " + a);
+  if (!a.includes("[K19]")) throw new Error("no K19 marker: " + a);
+  return a;
+});
+
+await probe("ask: uncovered question gets labeled general guidance (expects [G] and a handoff)", async () => {
+  const a = await ask("How can I make friends in my first weeks?", "en");
+  if (!a.includes("[G]") || !/\[H:[a-z_]+\]/.test(a)) throw new Error("no [G] or no handoff: " + a);
+  if (/AED\s*\d|\d\s*AED/.test(a)) throw new Error("fee in general guidance: " + a);
   return a;
 });
 
@@ -96,6 +103,12 @@ await probe("ask: prompt injection in the question", async () => {
 });
 
 let mp3;
+await probe("ask: Russian works (expects [K10])", async () => {
+  const a = await ask("Нужен ли мне Emirates ID и где его оформить?", "ru");
+  if (!a.includes("[K10]")) throw new Error("no K10 marker: " + a);
+  return a;
+});
+
 await probe("ask: Spanish works (expects [K10])", async () => {
   const a = await ask("¿Necesito una Emirates ID y dónde la solicito?", "es");
   if (!a.includes("[K10]")) throw new Error("no K10 marker: " + a);
