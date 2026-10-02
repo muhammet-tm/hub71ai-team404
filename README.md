@@ -20,8 +20,14 @@ The challenge is "How can we make it easier for people to arrive, settle in and 
 | Clarity of demo | One journey: letter, plan, passport flag, question, refusal. |
 | Differentiation | The model selects and translates; a verified file states the facts. The model never writes a fee, a deadline, or a link. |
 | Unique dataset | `data/arrival_kb.json`: 18 arrival steps, each traced to an official page and labeled with the result of an independent fact-check. The evidence behind it, including the claims that were rejected, is in `docs/evidence/`. |
-| Unique UI | A plan of checkable step cards with source chips and verification badges, a document scanner with confidence highlights, and a code-computed passport flag. The chat is one of four screens. |
+| Unique UI | The plan is a boarding pass and a set of tickets. Each step carries a rubber stamp that shows its fact-check status, and ticking a step stamps it done. A document scanner fills the form, a passport flag is computed in code, and the assistant sits beside the plan on wide screens. |
 | New problem discovered | Students need guidance before they hold an Emirates ID. Several official pages could not be opened on the day, and the university's public visa form dates from 2018, so Dalil shows the age of every source instead of hiding it. |
+
+## Screens
+
+![Plan](docs/screens/plan.png)
+
+![Start](docs/screens/start.png)
 
 ## Architecture
 
@@ -32,6 +38,7 @@ The challenge is "How can we make it easier for people to arrive, settle in and 
 - The knowledge base file is imported by both the pages and the prompts, so the facts on screen and the facts in the prompt are the same bytes.
 - The plan schema restricts the step identifier to the list generated from the file, and `lib/validate.ts` drops any identifier that is not in the file.
 - Every Responses API call sets `store: false`, and no call exposes tools to the model.
+- The plan call is hedged: if the first request has not answered in 9 seconds, a second starts and the faster one wins.
 - Every live call has a labeled fallback: "Standard plan", "Saved example", or "Offline answer from verified sources".
 
 ## Models
