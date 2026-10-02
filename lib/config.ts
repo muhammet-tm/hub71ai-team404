@@ -15,6 +15,7 @@ export const HISTORY_TURNS = 4;
 
 export const EXTRACT_TIMEOUT_MS = 40_000;
 export const PLAN_TIMEOUT_MS = 75_000;
+export const PLAN_HEDGE_MS = 9_000; // start a second plan request if the first has not answered by then
 export const ASK_FIRST_TOKEN_TIMEOUT_MS = 15_000;
 
 export const PHASES: Record<1 | 2 | 3 | 4, string> = {

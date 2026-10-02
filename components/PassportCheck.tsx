@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Camera, IdentificationCard } from "@phosphor-icons/react";
 import { Dots, Flag, StateLabel } from "@/components/ui";
 import { computeFlags } from "@/lib/checks";
 import { DalilError, SAMPLES, extractFromFile, extractSample } from "@/lib/client";
@@ -10,14 +11,14 @@ import type { CheckFlag, ExtractResponse } from "@/lib/types";
 export default function PassportCheck({ arrivalDate }: { arrivalDate: string }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
-  const [sample, setSample] = useState(false);
+  const [preview, setPreview] = useState("");
   const [result, setResult] = useState<ExtractResponse | null>(null);
   const [flags, setFlags] = useState<CheckFlag[]>([]);
   const [error, setError] = useState("");
 
-  async function run(job: () => Promise<ExtractResponse>, isSample: boolean) {
+  async function run(job: () => Promise<ExtractResponse>, image: string) {
     setBusy(true);
-    setSample(isSample);
+    setPreview(image);
     setError("");
     setResult(null);
     setFlags([]);
@@ -33,8 +34,8 @@ export default function PassportCheck({ arrivalDate }: { arrivalDate: string }) 
   }
 
   return (
-    <div className="mt-3 space-y-2.5 rounded-xl border border-dashed border-teal bg-teal-soft/40 p-3">
-      <p className="text-[12.5px] font-extrabold text-teal">Check your passport against this rule</p>
+    <div className="mt-3 space-y-2.5 rounded-lg border-[1.5px] border-dashed border-ink bg-paper/70 p-3">
+      <p className="text-[12.5px] font-extrabold">Check your passport against this rule</p>
       <input
         ref={fileRef}
         type="file"
@@ -44,32 +45,26 @@ export default function PassportCheck({ arrivalDate }: { arrivalDate: string }) 
         onChange={(e) => {
           const f = e.target.files?.[0];
           e.target.value = "";
-          if (f) run(() => extractFromFile(f, "passport"), false);
+          if (f) run(() => extractFromFile(f, "passport"), URL.createObjectURL(f));
         }}
       />
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          disabled={busy}
-          onClick={() => fileRef.current?.click()}
-          className="rounded-xl bg-teal px-2 py-2.5 text-[12.5px] font-extrabold text-white disabled:opacity-40"
-        >
+      <div className="grid gap-2 sm:grid-cols-2 sm:max-w-md">
+        <button disabled={busy} onClick={() => fileRef.current?.click()} className="btn btn-primary px-2 py-2.5 text-[12.5px]">
+          <Camera size={15} weight="bold" />
           Scan passport
         </button>
-        <button
-          disabled={busy}
-          onClick={() => run(() => extractSample("passport"), true)}
-          className="rounded-xl border-2 border-teal px-2 py-2.5 text-[12.5px] font-extrabold text-teal disabled:opacity-40"
-        >
+        <button disabled={busy} onClick={() => run(() => extractSample("passport"), SAMPLES.passport.image)} className="btn btn-ghost px-2 py-2.5 text-[12.5px]">
+          <IdentificationCard size={15} weight="bold" />
           Use sample passport
         </button>
       </div>
       {busy ? (
         <div aria-live="polite">
-          {sample ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={SAMPLES.passport.image} alt="Synthetic sample passport" className="mb-2 w-full rounded-lg border border-line" />
-          ) : null}
-          <p className="text-[12.5px] font-bold">
+          <div className="scan rounded-md border border-ink/30 sm:max-w-md">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={preview} alt="The passport being read" className="max-h-44 w-full object-cover object-top sm:max-w-md" />
+          </div>
+          <p className="mt-2 text-[12.5px] font-bold">
             Reading the expiry date <Dots />
           </p>
         </div>
@@ -77,16 +72,16 @@ export default function PassportCheck({ arrivalDate }: { arrivalDate: string }) 
       {error ? <Flag flag={{ id: "unreadable", level: "amber", message: error }} /> : null}
       {result ? (
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <p className="text-[11.5px] text-muted">
-              Expiry read: <strong className="text-ink">{result.extraction.passport_expiry || "not found"}</strong>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[12px] text-muted">
+              Expiry read: <strong className="font-mono text-ink">{result.extraction.passport_expiry || "not found"}</strong>
             </p>
             <StateLabel kind={result.source === "live" ? "live" : "saved_example"} />
           </div>
           {flags.map((f) => (
             <Flag key={f.id} flag={f} />
           ))}
-          <p className="text-[10.5px] leading-snug text-muted">
+          <p className="text-[11px] leading-snug text-muted">
             Dalil reads no passport number and no date of birth. The date rule is applied in code, not by the AI model.
           </p>
         </div>

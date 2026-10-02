@@ -1,5 +1,6 @@
 import { apiError, upstreamError } from "@/lib/errors";
-import { LANG_NAMES } from "@/lib/config";
+import { LANG_NAMES, PLAN_HEDGE_MS } from "@/lib/config";
+import { hedged } from "@/lib/hedge";
 import { base, MODEL, openai } from "@/lib/openai";
 import { planPrompt } from "@/lib/prompts";
 import { PLAN_SCHEMA } from "@/lib/schemas";
@@ -31,14 +32,22 @@ export async function POST(request: Request) {
 
   const started = Date.now();
   try {
-    const res = await openai().responses.create({
-      model: MODEL,
-      ...base(MODEL),
-      instructions: planPrompt(),
-      input: `STUDENT PROFILE\n${JSON.stringify(profile, null, 1)}\n\nReturn "language" as "${p.language}".`,
-      text: { format: { type: "json_schema", name: "dalil_plan", schema: PLAN_SCHEMA, strict: true } },
-      max_output_tokens: 6000,
-    });
+    const input = `STUDENT PROFILE\n${JSON.stringify(profile, null, 1)}\n\nReturn "language" as "${p.language}".`;
+    const res = await hedged(
+      (signal) =>
+        openai().responses.create(
+          {
+            model: MODEL,
+            ...base(MODEL),
+            instructions: planPrompt(),
+            input,
+            text: { format: { type: "json_schema", name: "dalil_plan", schema: PLAN_SCHEMA, strict: true } },
+            max_output_tokens: 6000,
+          },
+          { signal },
+        ),
+      PLAN_HEDGE_MS,
+    );
     const parsed = JSON.parse(res.output_text) as { greeting: string; steps: PlanStep[] };
     const { steps, warnings } = validatePlanSteps(parsed.steps || []);
     const result: PlanResult = {

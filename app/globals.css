@@ -1,47 +1,53 @@
 @import "tailwindcss";
 
+/* Dalil, "Passport" direction: paper, ink, and rubber stamps. One theme, light, locked. */
 :root {
-  --sand: #f6f1e7;
-  --paper: #fffdf8;
-  --ink: #16202e;
-  --muted: #5d6675;
-  --line: #e4dccb;
-  --teal: #0b6b62;
-  --teal-soft: #dcefe9;
-  --gold: #b7791f;
-  --gold-soft: #fbf0d6;
-  --red: #b42318;
-  --red-soft: #fde8e4;
-  --green: #17633a;
-  --green-soft: #dff3e4;
+  --paper: #efe6d2;
+  --card: #fbf6ea;
+  --ink: #1b2540;
+  --ink-soft: #2c3759;
+  --muted: #625c4c;
+  --line: #cfc5ad;
+  --stamp: #b83a24;
+  --stamp-soft: #f8e2dc;
+  --ok: #26694a;
+  --ok-soft: #dfecdc;
+  --gold: #a26a12;
+  --gold-soft: #f7e7c2;
+  --gold-bright: #e0a43a;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
 @theme inline {
-  --color-sand: var(--sand);
   --color-paper: var(--paper);
+  --color-card: var(--card);
   --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
   --color-muted: var(--muted);
   --color-line: var(--line);
-  --color-teal: var(--teal);
-  --color-teal-soft: var(--teal-soft);
+  --color-stamp: var(--stamp);
+  --color-stamp-soft: var(--stamp-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
-  --color-red: var(--red);
-  --color-red-soft: var(--red-soft);
-  --color-green: var(--green);
-  --color-green-soft: var(--green-soft);
-  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --color-gold-bright: var(--gold-bright);
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-display: var(--font-display-latin), var(--font-body), system-ui, sans-serif;
+  --font-mono: var(--font-mono-code), ui-monospace, monospace;
 }
 
 html {
-  background: var(--sand);
+  background: var(--paper);
   color-scheme: light;
 }
 
 body {
-  background: var(--sand);
+  background-color: var(--paper);
+  background-image: radial-gradient(#d8cdb2 1px, transparent 1px);
+  background-size: 14px 14px;
   color: var(--ink);
-  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
 }
 
 button,
@@ -53,14 +59,122 @@ textarea {
 }
 
 :focus-visible {
-  outline: 2px solid var(--teal);
+  outline: 2.5px solid var(--stamp);
   outline-offset: 2px;
 }
+
+/* ---- Paper objects ---- */
+
+/* A boarding pass or ticket: ink outline with a hard offset shadow. */
+.pass {
+  background: var(--card);
+  border: 1.5px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.ticket {
+  background: var(--card);
+  border: 1.5px solid var(--ink);
+  border-radius: 12px;
+}
+
+.perforation {
+  border-left: 2px dashed var(--ink);
+}
+
+.perforation-top {
+  border-top: 2px dashed var(--ink);
+}
+
+.route {
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 8px, transparent 8px 14px);
+}
+
+/* Rubber stamp: the fact-check status of an entry, and the "done" mark of a step. */
+.rubber {
+  display: inline-block;
+  border: 2px solid currentColor;
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-family: var(--font-mono-code), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: rotate(var(--r, -5deg));
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--ink);
+  font-weight: 800;
+  transition: transform 140ms var(--ease), box-shadow 140ms var(--ease), background-color 140ms var(--ease);
+}
+
+.btn:not(:disabled):hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.btn:not(:disabled):active {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--card);
+}
+
+.btn-stamp {
+  background: var(--stamp);
+  color: #fff;
+}
+
+.btn-ghost {
+  background: var(--card);
+  color: var(--ink);
+}
+
+.field {
+  width: 100%;
+  border-radius: 9px;
+  border: 1.5px solid var(--ink);
+  background: #fff;
+  padding: 0.6rem 0.75rem;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+}
+
+.field:focus {
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.field-check {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+}
+
+/* ---- Motion: paper weight, no bounce. Standard 280 ms, quick 140 ms, slow 480 ms. ---- */
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -69,13 +183,73 @@ textarea {
 }
 
 .rise {
-  animation: rise 0.35s ease-out both;
+  animation: rise 320ms var(--ease) both;
+  animation-delay: calc(min(var(--i, 0), 9) * 40ms);
+}
+
+/* The stamp comes down from above the page and settles: feedback for a verified or completed step. */
+@keyframes stamp-press {
+  0% {
+    opacity: 0;
+    transform: scale(1.7) rotate(calc(var(--r, -5deg) - 8deg));
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.96) rotate(var(--r, -5deg));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(var(--r, -5deg));
+  }
+}
+
+.stamp-in {
+  animation: stamp-press 300ms var(--ease) both;
+  animation-delay: calc(min(var(--i, 0), 9) * 40ms + 180ms);
+}
+
+/* A scan line over the document while the model reads it: shows that work is in progress. */
+@keyframes scan {
+  from {
+    transform: translateY(-4%);
+  }
+  to {
+    transform: translateY(2500%);
+  }
+}
+
+.scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4%;
+  background: linear-gradient(180deg, transparent, rgba(184, 58, 36, 0.35) 60%, var(--stamp));
+  animation: scan 1600ms linear infinite;
+}
+
+/* The plane travels the route once when the pass appears: the journey, in one gesture. */
+@keyframes fly {
+  from {
+    transform: translateX(-96%);
+  }
+  to {
+    transform: translateX(-36%);
+  }
+}
+
+.fly {
+  animation: fly 1100ms var(--ease) 200ms both;
 }
 
 @keyframes pulse-dot {
   0%,
   100% {
-    opacity: 0.3;
+    opacity: 0.25;
   }
   50% {
     opacity: 1;
@@ -83,12 +257,24 @@ textarea {
 }
 
 .dot {
-  animation: pulse-dot 1.1s ease-in-out infinite;
+  animation: pulse-dot 1100ms ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .rise,
-  .dot {
+  .stamp-in,
+  .fly,
+  .dot,
+  .scan::after {
     animation: none;
+  }
+  .fly {
+    transform: translateX(-36%);
+  }
+  .scan::after {
+    display: none;
+  }
+  .btn {
+    transition: none;
   }
 }

@@ -9,6 +9,15 @@ const KEYS = {
   chat: "dalil.chat",
 } as const;
 
+/** Fired on this window whenever stored data changes, so the navigation rail can update. */
+export const DALIL_EVENT = "dalil:update";
+
+function notify() {
+  try {
+    window.dispatchEvent(new Event(DALIL_EVENT));
+  } catch {}
+}
+
 function read<T>(key: string): T | null {
   try {
     const v = window.localStorage.getItem(key);
@@ -24,6 +33,14 @@ function write(key: string, value: unknown) {
   } catch {
     /* storage can be unavailable (private window); the app still works for this session */
   }
+  notify();
+}
+
+function remove(keys: string[]) {
+  try {
+    keys.forEach((k) => window.localStorage.removeItem(k));
+  } catch {}
+  notify();
 }
 
 export const store = {
@@ -33,18 +50,10 @@ export const store = {
   setProfile: (p: Profile) => write(KEYS.profile, p),
   getPlan: () => read<PlanResult>(KEYS.plan),
   setPlan: (p: PlanResult) => write(KEYS.plan, p),
-  clearPlan: () => {
-    try {
-      window.localStorage.removeItem(KEYS.plan);
-    } catch {}
-  },
+  clearPlan: () => remove([KEYS.plan]),
   getDone: () => read<Record<string, boolean>>(KEYS.done) || {},
   setDone: (d: Record<string, boolean>) => write(KEYS.done, d),
   getChat: () => read<ChatTurn[]>(KEYS.chat) || [],
   setChat: (c: ChatTurn[]) => write(KEYS.chat, c.slice(-20)),
-  deleteAll: () => {
-    try {
-      Object.values(KEYS).forEach((k) => window.localStorage.removeItem(k));
-    } catch {}
-  },
+  deleteAll: () => remove(Object.values(KEYS)),
 };
